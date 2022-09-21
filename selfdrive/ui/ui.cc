@@ -218,6 +218,8 @@ void ui_update_params(UIState *s) {
   s->scene.headlight_brightness_control = Params().getBool("CarBrightnessControl");
   s->scene.enable_radar_state = Params().getBool("DisplayRadarInfo");
   s->scene.screen_off_timer = Params().getBool("ScreenOffTimer");
+  s->scene.end_to_end_long = params.getBool("EndToEndLong");
+  s->scene.end_to_end_lat = params.getBool("EndToEndToggle");
 }
 
 void UIState::updateStatus() {
@@ -246,6 +248,7 @@ void UIState::updateStatus() {
     started_prev = scene.started;
     emit offroadTransition(!scene.started);
   }
+  ui_update_params(uiState());
 }
 
 UIState::UIState(QObject *parent) : QObject(parent) {
