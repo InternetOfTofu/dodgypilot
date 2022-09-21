@@ -368,7 +368,7 @@ class CarInterface(CarInterfaceBase):
       events.add(car.CarEvent.EventName.invalidLkasSetting)
 
     # cydia2020 - disable distance adjustment when using e2e long
-    if self.CS.distance_btn == 2:
+    if self.CS.distance_button_state == 2:
       events.add(car.CarEvent.EventName.followDistanceAdjustmentDisabled)
 
     ret.events = events.to_msg()
