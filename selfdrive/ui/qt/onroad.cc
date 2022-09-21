@@ -322,8 +322,8 @@ void NvgWindow::drawLaneLines(QPainter &painter, const UIState *s) {
   // paint path
   QLinearGradient bg(0, height(), 0, height() / 4);
   if (scene.end_to_end_long) {
-    bg.setColorAt(0, 0.97, 0.56, 0.4, 128);
-    bg.setColorAt(1, 1.0, 0.68, 0.0, 0);
+    bg.setColorAt(0, 0xf7, 0x8f, 0x66, 128);
+    bg.setColorAt(1, 0xff, 0xad, 0x00, 0);
   } else {
     bg.setColorAt(0, whiteColor(128));
     bg.setColorAt(1, whiteColor(0));
