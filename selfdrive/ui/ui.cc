@@ -218,8 +218,8 @@ void ui_update_params(UIState *s) {
   s->scene.headlight_brightness_control = Params().getBool("CarBrightnessControl");
   s->scene.enable_radar_state = Params().getBool("DisplayRadarInfo");
   s->scene.screen_off_timer = Params().getBool("ScreenOffTimer");
-  s->scene.end_to_end_long = params.getBool("EndToEndLong");
-  s->scene.end_to_end_lat = params.getBool("EndToEndToggle");
+  s->scene.end_to_end_long = Params().getBool("EndToEndLong");
+  s->scene.end_to_end_lat = Params().getBool("EndToEndToggle");
 }
 
 void UIState::updateStatus() {
