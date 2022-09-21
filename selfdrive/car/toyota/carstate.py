@@ -14,6 +14,7 @@ class CarState(CarStateBase):
   def __init__(self, CP):
     super().__init__(CP)
     params = Params()
+    self.frame = 0
     can_define = CANDefine(DBC[CP.carFingerprint]["pt"])
     self.shifter_values = can_define.dv["GEAR_PACKET"]["GEAR"]
     self.eps_torque_scale = EPS_SCALE[CP.carFingerprint] / 100.
@@ -193,6 +194,7 @@ class CarState(CarStateBase):
     else:
       self.stock_resume_ready = False
 
+    self.frame += 1
     return ret
 
   @staticmethod
