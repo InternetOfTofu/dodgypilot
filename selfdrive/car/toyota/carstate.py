@@ -13,7 +13,7 @@ from selfdrive.car.toyota.values import ToyotaFlags, CAR, DBC, STEER_THRESHOLD, 
 class CarState(CarStateBase):
   def __init__(self, CP):
     super().__init__(CP)
-    params = Params()
+    self.params = Params()
     self.frame = 0
     can_define = CANDefine(DBC[CP.carFingerprint]["pt"])
     self.shifter_values = can_define.dv["GEAR_PACKET"]["GEAR"]
@@ -28,7 +28,7 @@ class CarState(CarStateBase):
     self.cruise_active_prev = False
 
     # Logic for distance control button
-    self.allow_distance_adjustment = False if params.get_bool('EndToEndLong') else True
+    self.allow_distance_adjustment = False if self.params.get_bool('EndToEndLong') else True
     self.first_distance_button_frame = 0
     self.last_distance_button_frame = 0
     self.distance_button_actual = False
@@ -138,23 +138,25 @@ class CarState(CarStateBase):
     else:
       self.distance_button_actual = 0
 
-    self.distance_button_actual_prev = self.distance_button_actual
     # record distance button press and release frames
     if self.distance_button_actual and not self.distance_button_actual_prev:
       self.first_distance_button_frame = self.frame
     if self.distance_button_actual_prev and not self.distance_button_actual:
       self.last_distance_button_frame = self.frame
+    self.distance_button_actual_prev = self.distance_button_actual
 
     # handle distance button timer - last frame minus first frame is the length of time
     # the distance button has been depressed for, assume long press is 1 second (100 frames)
     # and short press is anywhere in between 0 and 1 second, this is further handled in interface
     if self.last_distance_button_frame - self.first_distance_button_frame > 100:
       self.distance_button_state = 3
+      self.desired_long_control_mode = not self.params.get_bool("EndToEndLong")
+      self.params.put_bool('EndToEndLong', self.desired_long_control_mode)
     if self.last_distance_button_frame - self.first_distance_button_frame < 100 and \
        self.last_distance_button_frame - self.first_distance_button_frame > 0:
-       if self.allow_distance_adjustment:
+      if self.allow_distance_adjustment:
         self.distance_button_state = 1
-       else:
+      else:
         self.distance_button_state = 2
     else:
       self.distance_button_state = 0
