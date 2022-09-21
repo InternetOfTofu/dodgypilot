@@ -161,6 +161,8 @@ class CarState(CarStateBase):
     if self.distance_button_actual == 0:
       self.distance_button_state = 0
 
+    self.e2e_long = self.params.get_bool("EndToEndLong")
+
     # some TSS2 cars have low speed lockout permanently set, so ignore on those cars
     # these cars are identified by an ACC_TYPE value of 2.
     # TODO: it is possible to avoid the lockout and gain stop and go if you
