@@ -150,13 +150,15 @@ class CarState(CarStateBase):
       self.distance_button_state = 3
       self.desired_long_control_mode = not self.params.get_bool("EndToEndLong")
       self.params.put_bool('EndToEndLong', self.desired_long_control_mode)
-    elif self.frame - self.first_distance_button_frame < 100 and \
+
+    if self.frame - self.first_distance_button_frame < 100 and \
        self.frame - self.first_distance_button_frame > 0 and not self.distance_button_actual:
       if not self.params.get_bool('EndToEndLong'):
         self.distance_button_state = 1
       else:
         self.distance_button_state = 2
-    else:
+
+    if self.distance_button_actual == 0:
       self.distance_button_state = 0
 
     # some TSS2 cars have low speed lockout permanently set, so ignore on those cars
