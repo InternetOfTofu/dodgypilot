@@ -152,7 +152,7 @@ class CarState(CarStateBase):
       self.distance_button_state = 3
       self.desired_long_control_mode = not self.params.get_bool("EndToEndLong")
       self.params.put_bool('EndToEndLong', self.desired_long_control_mode)
-    if self.last_distance_button_frame - self.first_distance_button_frame < 100 and \
+    elif self.last_distance_button_frame - self.first_distance_button_frame < 100 and \
        self.last_distance_button_frame - self.first_distance_button_frame > 0:
       if not self.params.get_bool('EndToEndLong'):
         self.distance_button_state = 1
