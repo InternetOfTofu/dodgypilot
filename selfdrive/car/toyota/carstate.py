@@ -28,7 +28,6 @@ class CarState(CarStateBase):
     self.cruise_active_prev = False
 
     # Logic for distance control button
-    self.allow_distance_adjustment = False if self.params.get_bool('EndToEndLong') else True
     self.first_distance_button_frame = 0
     self.last_distance_button_frame = 0
     self.distance_button_actual = False
@@ -120,7 +119,7 @@ class CarState(CarStateBase):
 
     if self.CP.carFingerprint in (CAR.LEXUS_IS, CAR.LEXUS_RC):
       ret.pcmFollowDistance = 3
-    elif not self.allow_distance_adjustment:
+    elif not self.params.get_bool('EndToEndLong'):
       ret.pcmFollowDistance = 3
     else:
       ret.pcmFollowDistance = cp.vl["PCM_CRUISE_2"]["PCM_FOLLOW_DISTANCE"]
@@ -155,7 +154,7 @@ class CarState(CarStateBase):
       self.params.put_bool('EndToEndLong', self.desired_long_control_mode)
     if self.last_distance_button_frame - self.first_distance_button_frame < 100 and \
        self.last_distance_button_frame - self.first_distance_button_frame > 0:
-      if self.allow_distance_adjustment:
+      if not self.params.get_bool('EndToEndLong'):
         self.distance_button_state = 1
       else:
         self.distance_button_state = 2
