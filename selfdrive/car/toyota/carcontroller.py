@@ -144,7 +144,7 @@ class CarController:
     # we can spam can to cancel the system even if we are using lat only control
     if (self.frame % 3 == 0 and self.CP.openpilotLongitudinalControl) or pcm_cancel_cmd:
       lead = hud_control.leadVisible or CS.out.vEgo < 12. # at low speed we always assume the lead is present so ACC can be engaged
-      adjust_distance = CS.distance_btn == 1
+      adjust_distance = CS.distance_button_state == 1
 
       # Send ACC_CONTROL_SAFE if RADAR Interceptor is detected, else send 0x343
       acc_msg = 'ACC_CONTROL_SAFE' if self.CP.carFingerprint in RADAR_ACC_CAR_TSS1 else 'ACC_CONTROL'

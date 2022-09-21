@@ -26,7 +26,13 @@ class CarState(CarStateBase):
     self.angle_offset = FirstOrderFilter(None, 60.0, DT_CTRL, initialized=False)
     self.has_zss = CP.hasZss
     self.cruise_active_prev = False
+
+    # Logic for distance control button
     self.allow_distance_adjustment = False if params.get_bool('EndToEndLong') else True
+    self.first_distance_button_frame = 0
+    self.last_distance_button_frame = 0
+    self.distance_button_actual = False
+    self.distance_button_state = 0
 
     self.low_speed_lockout = False
     self.acc_type = 1
@@ -118,15 +124,40 @@ class CarState(CarStateBase):
     else:
       ret.pcmFollowDistance = cp.vl["PCM_CRUISE_2"]["PCM_FOLLOW_DISTANCE"]
 
+    # pass ACC_TYPE through on TSS 2.0
     if self.CP.carFingerprint in TSS2_CAR:
       self.acc_type = cp_cam.vl["ACC_CONTROL"]["ACC_TYPE"]
-      self.distance_btn = 2 if (cp_cam.vl["ACC_CONTROL"]["DISTANCE"] == 1 and not self.allow_distance_adjustment) else 1 if (cp_cam.vl["ACC_CONTROL"]["DISTANCE"] == 1 and self.allow_distance_adjustment) else 0
+
+    # handle distance button
+    if self.CP.carFingerprint in TSS2_CAR:
+      self.distance_button_actual = cp_cam.vl["ACC_CONTROL"]["DISTANCE"]
     elif self.CP.smartDsu:
-      self.distance_btn = 2 if (cp.vl["SDSU"]["FD_BUTTON"] == 1 and not self.allow_distance_adjustment) else 1 if (cp.vl["SDSU"]["FD_BUTTON"] == 1 and self.allow_distance_adjustment) else 0
+      self.distance_button_actual = cp.vl["SDSU"]["FD_BUTTON"]
     elif self.CP.carFingerprint in RADAR_ACC_CAR_TSS1 and self.CP.radarInterceptor:
-      self.distance_btn = 2 if (cp.vl["ACC_CONTROL_COPY"]["DISTANCE"] == 1 and not self.allow_distance_adjustment) else 1 if (cp.vl["ACC_CONTROL_COPY"]["DISTANCE"] == 1 and self.allow_distance_adjustment) else 0
+      self.distance_button_actual = cp.vl["ACC_CONTROL_COPY"]["DISTANCE"]
     else:
-      self.distance_btn = 0
+      self.distance_button_actual = 0
+
+    self.distance_button_actual_prev = self.distance_button_actual
+    # record distance button press and release frames
+    if self.distance_button_actual and not self.distance_button_actual_prev:
+      self.first_distance_button_frame = self.frame
+    if self.distance_button_actual_prev and not self.distance_button_actual:
+      self.last_distance_button_frame = self.frame
+
+    # handle distance button timer - last frame minus first frame is the length of time
+    # the distance button has been depressed for, assume long press is 1 second (100 frames)
+    # and short press is anywhere in between 0 and 1 second, this is further handled in interface
+    if self.last_distance_button_frame - self.first_distance_button_frame > 100:
+      self.distance_button_state = 3
+    if self.last_distance_button_frame - self.first_distance_button_frame < 100 and \
+       self.last_distance_button_frame - self.first_distance_button_frame > 0:
+       if self.allow_distance_adjustment:
+        self.distance_button_state = 1
+       else:
+        self.distance_button_state = 2
+    else:
+      self.distance_button_state = 0
 
     # some TSS2 cars have low speed lockout permanently set, so ignore on those cars
     # these cars are identified by an ACC_TYPE value of 2.
