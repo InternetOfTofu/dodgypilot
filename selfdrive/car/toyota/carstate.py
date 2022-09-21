@@ -148,7 +148,7 @@ class CarState(CarStateBase):
     # handle distance button timer - last frame minus first frame is the length of time
     # the distance button has been depressed for, assume long press is 1 second (100 frames)
     # and short press is anywhere in between 0 and 1 second, this is further handled in interface
-    if self.last_distance_button_frame - self.first_distance_button_frame > 100:
+    if self.last_distance_button_frame - self.first_distance_button_frame >= 100:
       self.distance_button_state = 3
       self.desired_long_control_mode = not self.params.get_bool("EndToEndLong")
       self.params.put_bool('EndToEndLong', self.desired_long_control_mode)
