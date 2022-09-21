@@ -32,6 +32,7 @@ class CarState(CarStateBase):
     self.first_distance_button_frame = 0
     self.last_distance_button_frame = 0
     self.distance_button_actual = False
+    self.distance_button_actual_prev = False
     self.distance_button_state = 0
 
     self.low_speed_lockout = False
