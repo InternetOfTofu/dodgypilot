@@ -16,3 +16,6 @@
 [submodule "canfilter"]
 	path = canfilter
 	url = https://github.com/cydia2020/canfilter
+[submodule "tinygrad_repo"]
+	path = tinygrad_repo
+	url = https://github.com/geohot/tinygrad
