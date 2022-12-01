@@ -137,8 +137,10 @@ class CarController:
     if not CC.enabled:
       self.last_off_frame = self.frame
 
+    permit_braking_accel_threshold = interp(CS.out.vEgo, [0., 5.], [.35, 0.])
+
     # Handle permit braking logic
-    if (actuators.accel > 0.35) or not CC.enabled or (0.5 / DT_CTRL > (self.frame - self.last_off_frame) and not lead_vehicle_stopped):
+    if (actuators.accel > permit_braking_accel_threshold) or not CC.enabled or (0.5 / DT_CTRL > (self.frame - self.last_off_frame) and not lead_vehicle_stopped):
       self.permit_braking = False
     else:
       self.permit_braking = True

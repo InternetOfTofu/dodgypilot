@@ -40,10 +40,10 @@ def set_long_tune(tune, name):
   elif name == LongTunes.TSSPPrius:
     tune.kpBP = [0., 35.]
     tune.kiBP = [0.]
-    tune.kdBP = [0., 20., 35.]
+    tune.kdBP = [0., 5., 20., 35.]
     tune.kpV = [1.2, 1.4]
     tune.kiV = [0.36]
-    tune.kdV = [.4, .6, .75]
+    tune.kdV = [1.6, 0.42, .6, .75]
   # Default longitudinal tune
   elif name == LongTunes.TSSStock:
     tune.kpBP = [0., 5., 35.]
