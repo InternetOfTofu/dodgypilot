@@ -39,11 +39,11 @@ def set_long_tune(tune, name):
   # Longitudinal tune for Toyota Prius
   elif name == LongTunes.TSSPPrius:
     tune.kpBP = [0., 35.]
-    tune.kiBP = [0.]
-    tune.kdBP = [0., 16., 20., 45.]
+    tune.kiBP = [0., 35.]
+    tune.kdBP = [0., 20., 45.]
     tune.kpV = [1.2, 1.4]
-    tune.kiV = [.36]
-    tune.kdV = [.25, .3, .4, .7]
+    tune.kiV = [0.54, 0.36]
+    tune.kdV = [.4, .6, 1.]
   # Default longitudinal tune
   elif name == LongTunes.TSSStock:
     tune.kpBP = [0., 5., 35.]
