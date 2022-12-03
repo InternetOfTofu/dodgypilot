@@ -29,7 +29,7 @@ class LatTunes(Enum):
 ###### LONG ######
 def set_long_tune(tune, name):
   tune.deadzoneBP = [0., 9., 12.]
-  tune.deadzoneV = [.1, .15, 0.]
+  tune.deadzoneV = [.1, .15, .06]
   # Improved longitudinal tune
   if name == LongTunes.TSS2:
     tune.kpBP = [0., 5., 20.]
@@ -42,8 +42,8 @@ def set_long_tune(tune, name):
     tune.kiBP = [0.]
     tune.kdBP = [0., 5., 20., 35.]
     tune.kpV = [1.2]
-    tune.kiV = [0.36]
-    tune.kdV = [1.6, 0.42, .6, .75]
+    tune.kiV = [0.44]
+    tune.kdV = [1.2, 0.5, .64, .8]
   # Default longitudinal tune
   elif name == LongTunes.TSSStock:
     tune.kpBP = [0., 5., 35.]
